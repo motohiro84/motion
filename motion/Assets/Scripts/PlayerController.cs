@@ -14,7 +14,9 @@ public class PlayerController : MonoBehaviour {
  
         PlayerTransform = transform.parent;
         CameraTransform = GetComponent<Transform>();
- 
+
+        CameraTransform.transform.Rotate(360f, 0, 0);
+
     }
 	
 	// Update is called once per frame
@@ -22,38 +24,19 @@ public class PlayerController : MonoBehaviour {
         float X_Rotation = Input.GetAxis("Mouse X");
         float Y_Rotation = Input.GetAxis("Mouse Y");
         PlayerTransform.transform.Rotate(0, X_Rotation, 0);
-        
-        ii = Camera.transform.localEulerAngles.x;
-        if (ii > 334 && ii < 360 || ii > 0 && 20 > ii)
+
+        //オイラー角と、マウスの変化量を足したものをラジアンに変換
+        ii = (Camera.transform.localEulerAngles.x - Y_Rotation) * Mathf.Deg2Rad;
+        //sin関数で-1~1の範囲に変換
+        ii = Mathf.Sin(ii);
+
+        //角度の制限をつけてやる
+        if (ii > -0.6f && ii < 0.2f)
         {
             CameraTransform.transform.Rotate(-Y_Rotation, 0, 0);
-            float kk = Y_Rotation;
+            //float kk = Y_Rotation;
         }
-        else
-        {
-           
-            if (ii > 300)
-            {
- 
-                if (Input.GetAxis("Mouse Y") < 0)
-                {
- 
-                    CameraTransform.transform.Rotate(-Y_Rotation, 0, 0);
- 
-                }
-            }
-            else
-            {
-                if (Input.GetAxis("Mouse Y") > 0)
-                {
- 
-                    CameraTransform.transform.Rotate(-Y_Rotation, 0, 0);
- 
-                }
- 
-            }
-        }
- 
+
         float angleDir = PlayerTransform.transform.eulerAngles.y * (Mathf.PI / 180.0f);
         Vector3 dir1 = new Vector3(Mathf.Sin(angleDir), 0, Mathf.Cos(angleDir));
         Vector3 dir2 = new Vector3(-Mathf.Cos(angleDir), 0, Mathf.Sin(angleDir));
